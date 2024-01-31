@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "title": "Входящие",
+        "items": [
+            {
+                "id": 2,
+                "title": "Нарисовать дизайн",
+                "price": 42000,
+                "company": "ОАО 'Камунарка'",
+                "date": "14 December 2023"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "На согласовании",
+        "items": [
+            {
+                "id": 2,
+                "title": "Нарисовать дизайн",
+                "price": 42000,
+                "company": "ОАО 'Камунарка'",
+                "date": "14 December 2023"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "В производстве",
+        "items": [
+            {
+                "id": 1,
+                "title": "Сделать сайт",
+                "price": 10000000,
+                "company": "ООО 'SportGym'",
+                "date": "12 December 2023"
+            },
+            {
+                "id": 1,
+                "title": "Внести правки",
+                "price": 200000,
+                "company": "'Слдакий мир'",
+                "date": "13 December 2023"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Произведено",
+        "items": [
+            {
+                "id": 1,
+                "title": "Сделать сайт",
+                "price": 6300000,
+                "company": "ООО 'Sweet-Cat-Candy'",
+                "date": "06 December 2023"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "title": "К отгрузке",
+        "items": [
+            {
+                "id": 1,
+                "title": "Доделать бэк",
+                "price": 70000,
+                "company": "ЗАО 'WhyWork'",
+                "date": "01 December 2023"
+            }
+        ]
+    }
+]

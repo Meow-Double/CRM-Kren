@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  gap: 30px;
+  font-size: 22px;
+  color: #fff;
+  font-weight: 500;
+  justify-content: space-between;
+  border-top: 1px solid rgba($color: #fff, $alpha: 0.8);
+  padding-top: 20px;
+  padding-bottom: 12px;
+
+  img {
+    min-width: 48px;
+    min-height: 48px;
+    max-width: 32px;
+    max-height: 32px;
+
+    border-radius: 100%;
+  }
+  h4 {
+    max-width: 300px;
+    width: 100%;
+    text-align: center;
+    font-weight: inherit;
+  }
+  span {
+    max-width: 300px;
+    width: 100%;
+    text-align: center;
+    font-weight: inherit;
+  }
+}
