@@ -13,7 +13,30 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  a {
+    position: relative;
+    transition: color .2s ease-in-out;
+
+    &:hover {
+      color: #a152c8;
+    }
+
+    &::before {
+      transition: all 0.3s ease-in-out;
+      content: '';
+      opacity: 0;
+      background-color: #a152c8;
+      position: absolute;
+      height: 2px;
+      width: 1%;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
 }
+
 .logo {
   display: flex;
   align-items: center;
@@ -51,5 +74,28 @@
   height: 100%;
   path {
     transition: fill 0.3s ease-in-out;
+  }
+}
+
+// a{
+//   // background-color: #a152c8;
+//   // border-bottom: 2px solid #a152c8;
+
+//   &:hover.menu {
+//       &::before {
+//         // width: 100%;
+//         opacity: 0;
+//       }
+//   }
+// }
+
+.menu {
+  .activeLink {
+    color:#a152c8;
+    
+    &::before {
+      opacity: 1;
+      width: 100%;
+    }
   }
 }

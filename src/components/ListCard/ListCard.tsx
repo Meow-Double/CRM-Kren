@@ -2,7 +2,8 @@ import { useState } from 'react';
 import styles from './ListCard.module.scss';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
-import { setId, setOpen } from '../../store/slices/aboutSlice/aboutSlice';
+import { handleOpenAbout, setCurrentParametrs } from '../../store/slices/aboutSlice/aboutSlice';
+import { removeItem } from '../../store/slices/boardsSlice/boardsSlice';
 
 interface ListCardProps {
   title: string;
@@ -11,7 +12,7 @@ interface ListCardProps {
   date: string;
   id: number;
   boardId: number;
-  itemId:number;
+  itemId: number;
   dispatch: any;
 }
 
@@ -71,6 +72,12 @@ export const ListCard: React.FC<ListCardProps> = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
+    // console.log({ title, price, company, date, id, boardId, itemId});
+    // if (confirm()) {
+    //   dispatch(removeItem({ boardId, itemId }));
+    // }
+    dispatch(handleOpenAbout(true));
+    dispatch(setCurrentParametrs({ id, boardId, itemId }));
     // const querySearch = qs.stringify({
     //   board: boardId,
     //   id:id

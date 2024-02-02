@@ -4,14 +4,17 @@ import ArrowIcon from '../../../assets/arrow-up.svg?react';
 import { useAppDispatch } from '../../../hooks/useAppDispatch';
 import { addCard } from '../../../store/slices/cardsSlice/cardsSlice';
 import { getLastIdItem } from '../../../utils/getLastIdItem';
+import { addItem } from '../../../store/slices/boardsSlice/boardsSlice';
+import { createMessage } from '../../../store/slices/aboutSlice/aboutSlice';
 
 type FormProps = {
-  id: number;
-  lengthItems:number;
-  lastId: number;
+  // id: number;
+  boardId: number;
+  lengthItems: number;
+  lastId: number | null;
 };
 
-export const Form: React.FC<FormProps> = ({ id, lengthItems, lastId }) => {
+export const Form: React.FC<FormProps> = ({ boardId, lengthItems, lastId }) => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [email, setEmail] = useState('');
@@ -28,17 +31,20 @@ export const Form: React.FC<FormProps> = ({ id, lengthItems, lastId }) => {
   const dispatch = useAppDispatch();
 
   const addNewCard = () => {
-
+    const itemId = lengthItems + 1;
+    const id = lastId ? lastId + 1 : 1;
     const obj = {
       title,
       price,
       company,
       email,
-      id: lastId + 1,
-      itemId: lengthItems + 1,
+      id,
+      itemId,
       date: `${new Date()}`,
+      place: '-',
     };
-    
+    dispatch(addItem({ boardId, obj }));
+    dispatch(createMessage({ boardId, itemId, id }));
     // dispatch(addCard({ id, obj }));
     console.log(obj);
 

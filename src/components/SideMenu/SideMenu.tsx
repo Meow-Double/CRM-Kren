@@ -4,7 +4,7 @@ import LogoIcon from '../../assets/logo.svg?react';
 import ExitIcon from '../../assets/exit.svg?react';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice/userSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const menuItem: string[] = [
   'Home',
@@ -20,15 +20,24 @@ const menuItem: string[] = [
 export const SideMenu: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const onOutsideLogin = () => {
     window.localStorage.removeItem('user');
     dispatch(removeUser());
-    navigate("/")
+    navigate('/');
   };
 
   const renderItem = (): JSX.Element[] => {
-    return menuItem.map((item) => <li key={item}><Link to={`${item.toLowerCase()}`}>{item}</Link></li>);
+    return menuItem.map((item) => (
+      <li key={item}>
+        <NavLink
+          to={`${item.toLowerCase()}`}
+          className={({ isActive }) => (isActive ? styles.activeLink : "")}
+        >
+          {item}
+        </NavLink>
+      </li>
+    ));
   };
 
   return (

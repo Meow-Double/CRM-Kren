@@ -4,16 +4,16 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/slices/userSlice/userSlice';
 import styles from './Home.module.scss';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { fetchCards } from '../../store/slices/cardsSlice/cardsSlice';
 import qs from "qs"
-import { setId, setOpen } from '../../store/slices/aboutSlice/aboutSlice';
+import { fetchMessage, setId, setOpen } from '../../store/slices/aboutSlice/aboutSlice';
 import { Boards } from '../../components/Boards/Boards';
+import { AboutCard } from '../../components/AboutCard/AboutCard';
 
 
 export const Home: React.FC = () => {
   const user = useSelector(selectUser);
 
-  // const openWindow = useSelector(state => state.about.open)
+  const openWindow = useSelector(state => state.about.isOpen)
 
 
   const dispatch = useAppDispatch();
@@ -22,8 +22,12 @@ export const Home: React.FC = () => {
     if (user.email) {
       window.localStorage.setItem('user', JSON.stringify(user));
     }
-    dispatch(fetchCards());
+    // dispatch(fetchCards());
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchMessage())
+  }, [])
 
 
 
@@ -38,6 +42,8 @@ export const Home: React.FC = () => {
     <>
       <h1 className="title">CRM System by KRen</h1>
       <Boards />
+      {openWindow && <AboutCard />}
+      {/* <AboutCard /> */}
       {/* <List /> */}
       {/* {openWindow && <AboutCard/>} */}
     </>

@@ -9,7 +9,8 @@ const cardNames = {
   image: './',
   company: 'Наименование',
   email: 'Почта',
-  place: 'откуда пришёл',
+  place: 'Откуда пришёл',
+  buttons: 'Опция',
 };
 export const Customers: React.FC<{}> = () => {
   // const [data, setData] = useState();
@@ -23,7 +24,7 @@ export const Customers: React.FC<{}> = () => {
 
   const [items, setItems] = useState([]);
 
-  const boards = useSelector((state) => state.cards.boards);
+  const boards = useSelector((state) => state.boards.boards);
 
   useEffect(() => {
     const array: Array<any> = [];
@@ -40,7 +41,10 @@ export const Customers: React.FC<{}> = () => {
   return (
     <div>
       <h1 className="title">Наши клиенты</h1>
-      <ul>{renderCards()}</ul>
+      <ul>
+        <Card {...cardNames} />
+        {renderCards()}
+      </ul>
     </div>
   );
 };
