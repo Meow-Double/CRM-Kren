@@ -17,10 +17,10 @@ export const Boards: React.FC<{}> = () => {
   const [currentBoard, setCurrentBoard] = useState([]);
   const [currentItem, setCurrentItem] = useState([]);
   const lastId = useRef(null);
-  const dispatch = useAppDispatch();
   const boardsItems = useSelector((state) => state.boards.boards);
   const { loading, error } = useSelector((state) => state.boards);
 
+  const dispatch = useAppDispatch();
   // useEffect(() => {
   //   dispatch(fetchBoards());
   // }, []);
@@ -34,6 +34,9 @@ export const Boards: React.FC<{}> = () => {
 
   const dragOverHandler = (e) => {
     e.preventDefault();
+    // if (e.target.className === styles.item) {
+    //   e.target.style.boxShadow = ' 0 10px 3px white';
+    // }
   };
   const dragLeaveHandler = (e) => {
     e.target.style.boxShadow = 'none';
@@ -41,29 +44,27 @@ export const Boards: React.FC<{}> = () => {
 
   const dragStartHandler = (e, board, item) => {
     setCurrentBoard(board);
-    setCurrentItem({ ...item, itemId: item.itemId});
+    setCurrentItem(item);
   };
 
   const dragEndHandler = (e) => {
     e.target.style.boxShadow = 'none';
   };
-
-  
   const dragDropHandler = (e, board, item) => {
     e.preventDefault();
 
     const currentIndex = currentBoard.items.indexOf(currentItem);
     currentBoard.items.splice(currentIndex, 1);
 
-    // const currentItemId = board.items.length;
-    // const currentNewItem = { ...currentItem, itemId: currentItemId + 1 };
-
     const dropIndex = board.items.indexOf(item);
     board.items.splice(dropIndex + 1, 0, currentItem);
 
+    const newBoardItems = board.items.map((item, index) => ({ ...item, itemId: index + 1 }));
+    const newBoard = { ...board, items: newBoardItems };
+
     const newBoards = boards.map((b) => {
-      if (b.id === board.id) {
-        return board;
+      if (b.id === newBoard.id) {
+        return newBoard;
       }
       if (b.id === currentBoard.id) {
         return currentBoard;
@@ -73,22 +74,20 @@ export const Boards: React.FC<{}> = () => {
     dispatch(changeBoards(newBoards));
   };
 
-
-
   const dropCardHandler = (e, board) => {
     e.preventDefault();
     const currentId = board.items.map((item) => item.id);
     if (!currentId.includes(currentItem.id)) {
-      const currentItemId = board.items.length;
-      const currentNewItem = { ...currentItem, itemId: currentItemId + 1 };
-
-      board.items.push(currentNewItem);
+      board.items.push(currentItem);
       const currentIndex = currentBoard.items.indexOf(currentItem);
       currentBoard.items.splice(currentIndex, 1);
 
+      const newBoardItems = board.items.map((item, index) => ({ ...item, itemId: index + 1 }));
+      const newBoard = { ...board, items: newBoardItems };
+
       const newBoards = boards.map((b) => {
-        if (b.id === board.id) {
-          return board;
+        if (b.id === newBoard.id) {
+          return newBoard;
         }
         if (b.id === currentBoard.id) {
           return currentBoard;
