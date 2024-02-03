@@ -4,7 +4,7 @@ import LogoIcon from '../../assets/logo.svg?react';
 import ExitIcon from '../../assets/exit.svg?react';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice/userSlice';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const menuItem: string[] = [
   'Home',

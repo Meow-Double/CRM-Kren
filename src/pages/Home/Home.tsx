@@ -1,27 +1,15 @@
-import { useEffect, useState } from 'react';
-// import { AboutCard, List, SideMenu } from '../../components';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/slices/userSlice/userSlice';
 import styles from './Home.module.scss';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import qs from 'qs';
-import {
-  fetchMessage,
-  handleOpenAbout,
-  setCurrentParametrs,
-  setId,
-  setOpen,
-} from '../../store/slices/aboutSlice/aboutSlice';
 import { Boards } from '../../components/Boards/Boards';
 import { AboutCard } from '../../components/AboutCard/AboutCard';
-import { fetchBoards } from '../../store/slices/boardsSlice/fetchBoards';
+import { isOpenSelect } from '../../store/slices/aboutSlice/aboutSelectors';
 
 export const Home: React.FC = () => {
   const user = useSelector(selectUser);
 
-  const openWindow = useSelector((state) => state.about.isOpen);
-
-  const dispatch = useAppDispatch();
+  const openWindow = useSelector(isOpenSelect);
 
   useEffect(() => {
     if (user.email) {

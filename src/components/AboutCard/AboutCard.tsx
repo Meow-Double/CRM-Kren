@@ -11,20 +11,14 @@ import { Message } from './Message/Message';
 import { removeItem } from '../../store/slices/boardsSlice/boardsSlice';
 import { useNavigate } from 'react-router-dom';
 
-interface AboutCardObject {
-  id: number;
-  itemId: number;
-  title: string;
-  price: number;
-  company: string;
-  date: number;
+interface AboutCardObject extends itemTypes {
   stage: string;
   boardId: number;
 }
 
 export const AboutCard: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
-  const [data, setData] = useState<AboutCardObject | null>(null);
+  const [data, setData] = useState<AboutCardObject>();
 
   const parametrs = useSelector(currentParametrsSelect);
   const boards = useSelector(boardsSelect);
@@ -56,11 +50,13 @@ export const AboutCard: React.FC<{}> = () => {
 
   const removeItemFromBoard = () => {
     if (confirm('Вы уверены, что хотите удалить данный объект?')) {
-      const obj = {
-        boardId: data.boardId,
-        itemId: data.itemId,
-      };
-      dispatch(removeItem(obj));
+      if (data) {
+        const obj: { boardId: number; itemId: number } = {
+          boardId: data.boardId,
+          itemId: data.itemId,
+        };
+        dispatch(removeItem(obj));
+      }
       dispatch(handleOpenAbout(false));
     }
   };

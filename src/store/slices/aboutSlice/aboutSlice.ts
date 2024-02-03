@@ -1,41 +1,7 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../../store';
-import axios from 'axios';
-// import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { aboutParametrsTypes, aboutTypes, currentParametrsTypes, messageTypes } from './aboutTypes';
 
-export const fetchMessage = createAsyncThunk('about/fetchMessage', async () => {
-  const { data } = await axios.get(
-    // `https://658b0e95ba789a96223860cb.mockapi.io/items`,
-    `https://1df99c0c2ae7768d.mokky.dev/message`,
-  );
-  return data;
-});
-
-const fetchHandleMessage = (id: number, obj: messageTypes) => {
-  axios.patch<aboutParametrsTypes>(`https://1df99c0c2ae7768d.mokky.dev/message/${id}`, obj);
-};
-
-const fetchCreateMessage = (obj: aboutParametrsTypes) => {
-  axios.post<aboutParametrsTypes>(`https://1df99c0c2ae7768d.mokky.dev/message`, obj)
-}
-
-export interface aboutTypes {
-  isOpen: boolean;
-  currentParametrs: null | aboutParametrsTypes;
-  messages: any;
-}
-
-export type messageTypes = {
-  id: number;
-  text: string;
-};
-
-type aboutParametrsTypes = {
-  id: number;
-  boardId: number;
-  itemId: number;
-  messages: Array<messageTypes> | [];
-};
+import { fetchMessage, fetchHandleMessage, fetchCreateMessage } from './fetchAbout';
 
 const initialState: aboutTypes = {
   isOpen: false,
@@ -47,48 +13,56 @@ export const aboutSlice = createSlice({
   name: 'about',
   initialState,
   reducers: {
-    handleOpenAbout(state, action) {
+    handleOpenAbout(state, action: PayloadAction<boolean>) {
       state.isOpen = action.payload;
     },
-    setCurrentParametrs(state, action) {
+    setCurrentParametrs(state, action: PayloadAction<currentParametrsTypes>) {
       state.currentParametrs = action.payload;
     },
-    addMessage(state, action) {
-      const currentMessage = state.messages.find((item) => item.id === action.payload.id);
+    addMessage(state, action: PayloadAction<{ id: number; obj: messageTypes }>) {
+      const currentMessage = state.messages.find(
+        (item: aboutParametrsTypes) => item.id === action.payload.id,
+      );
 
       if (currentMessage) {
         currentMessage.messages.push(action.payload.obj);
 
-        const messages = state.messages.filter((item) => item.id !== currentMessage.id);
+        const messages = state.messages.filter(
+          (item: aboutParametrsTypes) => item.id !== currentMessage.id,
+        );
         state.messages = [...messages, currentMessage];
 
         fetchHandleMessage(action.payload.id, currentMessage);
-      } 
+      }
     },
     removeMessage(state, action) {
-      const currentMessage = state.messages.find((item) => item.id === action.payload.id);
-
-      const newMessages = currentMessage.messages.filter(
-        (item) => item.id !== action.payload.messageId,
+      const currentMessage = state.messages.find(
+        (item: aboutParametrsTypes) => item.id === action.payload.id,
       );
 
-      const messages = state.messages.filter((item) => item.id !== currentMessage.id);
-      const newMwssageObject = { ...currentMessage, messages: newMessages };
-      state.messages = [...messages, newMwssageObject];
+      const newMessages = currentMessage?.messages.filter(
+        (item: messageTypes) => item.id !== action.payload.messageId,
+      );
 
-      fetchHandleMessage(action.payload.id, newMwssageObject);
+      const messages = state.messages.filter(
+        (item: aboutParametrsTypes) => item.id !== currentMessage?.id,
+      );
+      const newMessageObject = { ...currentMessage, messages: newMessages } as aboutParametrsTypes;
+      state.messages = [...messages, newMessageObject];
+
+      fetchHandleMessage(action.payload.id, newMessageObject);
     },
-    createMessage(state, action){
+    createMessage(state, action) {
       const newMessage = {
-        id:action.payload.id,
-        itemId:action.payload.itemId,
-        boardId:action.payload.boardId,
-        messages:[]
-      }
-      state.messages = [...state.messages, newMessage]
+        id: action.payload.id,
+        itemId: action.payload.itemId,
+        boardId: action.payload.boardId,
+        messages: [],
+      };
+      state.messages = [...state.messages, newMessage];
 
       fetchCreateMessage(newMessage);
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchMessage.pending, (state) => {

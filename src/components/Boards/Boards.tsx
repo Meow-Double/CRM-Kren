@@ -1,24 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
-import styles from './Boards.module.scss';
-import axios from 'axios';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { ListCard } from '../ListCard/ListCard';
-import { Title } from './Title/Title';
+import { DragEvent, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { changeBoards } from '../../store/slices/boardsSlice/boardsSlice';
-import { fetchBoards } from '../../store/slices/boardsSlice/fetchBoards';
+
+import { ListCard } from '../';
+import { Title } from './Title/Title';
 import { Form } from './Form/Form';
+
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { getLastIdItem } from '../../utils/getLastIdItem';
+
+import styles from './Boards.module.scss';
 import { Loading } from '../../uikit';
+
+import { boardsObject, itemTypes } from '../../store/slices/boardsSlice/boardsTypes';
+import { boardsAllSelect, boardsSelect } from '../../store/slices/boardsSlice/boardsSelectors';
+import { changeBoards } from '../../store/slices/boardsSlice/boardsSlice';
 
 export const Boards: React.FC<{}> = () => {
   const [boards, setBoards] = useState([]);
 
-  const [currentBoard, setCurrentBoard] = useState([]);
-  const [currentItem, setCurrentItem] = useState([]);
+  const [currentBoard, setCurrentBoard] = useState<boardsObject>();
+  const [currentItem, setCurrentItem] = useState<itemTypes>();
   const lastId = useRef(null);
-  const boardsItems = useSelector((state) => state.boards.boards);
-  const { loading, error } = useSelector((state) => state.boards);
+  const boardsItems = useSelector(boardsSelect);
+  const { loading, error } = useSelector(boardsAllSelect);
 
   const dispatch = useAppDispatch();
   // useEffect(() => {
@@ -32,41 +36,38 @@ export const Boards: React.FC<{}> = () => {
     }
   }, [boardsItems]);
 
-  const dragOverHandler = (e) => {
+  const dragOverHandler = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // if (e.target.className === styles.item) {
-    //   e.target.style.boxShadow = ' 0 10px 3px white';
-    // }
-  };
-  const dragLeaveHandler = (e) => {
-    e.target.style.boxShadow = 'none';
   };
 
-  const dragStartHandler = (e, board, item) => {
+  // const dragLeaveHandler = (e) => {
+  // };
+
+  const dragStartHandler = (board: boardsObject, item: itemTypes) => {
     setCurrentBoard(board);
     setCurrentItem(item);
   };
 
-  const dragEndHandler = (e) => {
-    e.target.style.boxShadow = 'none';
-  };
-  const dragDropHandler = (e, board, item) => {
+  // const dragEndHandler = () => {
+  // };
+
+  const dragDropHandler = (e: DragEvent<HTMLDivElement>, board: boardsObject, item: itemTypes) => {
     e.preventDefault();
 
-    const currentIndex = currentBoard.items.indexOf(currentItem);
-    currentBoard.items.splice(currentIndex, 1);
+    const currentIndex = currentBoard?.items.indexOf(currentItem as itemTypes);
+    currentBoard?.items.splice(currentIndex as number, 1);
 
     const dropIndex = board.items.indexOf(item);
-    board.items.splice(dropIndex + 1, 0, currentItem);
+    board.items.splice(dropIndex + 1, 0, currentItem as itemTypes);
 
     const newBoardItems = board.items.map((item, index) => ({ ...item, itemId: index + 1 }));
     const newBoard = { ...board, items: newBoardItems };
 
-    const newBoards = boards.map((b) => {
+    const newBoards = boards.map((b: boardsObject) => {
       if (b.id === newBoard.id) {
         return newBoard;
       }
-      if (b.id === currentBoard.id) {
+      if (b.id === currentBoard?.id) {
         return currentBoard;
       }
       return b;
@@ -74,22 +75,22 @@ export const Boards: React.FC<{}> = () => {
     dispatch(changeBoards(newBoards));
   };
 
-  const dropCardHandler = (e, board) => {
+  const dropCardHandler = (e: DragEvent<HTMLDivElement>, board: boardsObject) => {
     e.preventDefault();
     const currentId = board.items.map((item) => item.id);
-    if (!currentId.includes(currentItem.id)) {
-      board.items.push(currentItem);
-      const currentIndex = currentBoard.items.indexOf(currentItem);
-      currentBoard.items.splice(currentIndex, 1);
+    if (!currentId.includes(currentItem ? currentItem.id : 0)) {
+      board.items.push(currentItem as itemTypes);
+      const currentIndex = currentBoard?.items.indexOf(currentItem as itemTypes);
+      currentBoard?.items.splice(currentIndex ? currentIndex : 0, 1);
 
       const newBoardItems = board.items.map((item, index) => ({ ...item, itemId: index + 1 }));
       const newBoard = { ...board, items: newBoardItems };
 
-      const newBoards = boards.map((b) => {
+      const newBoards = boards.map((b: boardsObject) => {
         if (b.id === newBoard.id) {
           return newBoard;
         }
-        if (b.id === currentBoard.id) {
+        if (b.id === currentBoard?.id) {
           return currentBoard;
         }
         return b;
@@ -116,23 +117,23 @@ export const Boards: React.FC<{}> = () => {
   // ------------------------------------------
   return (
     <div className={styles.window}>
-      {boards.map((board, index) => (
+      {boards.map((board: boardsObject, index: number) => (
         <div
           key={board.id}
-          onDragOver={(e) => dragOverHandler(e)}
-          onDrop={(e) => dropCardHandler(e, board)}
+          onDragOver={(e: DragEvent<HTMLDivElement>) => dragOverHandler(e)}
+          onDrop={(e: DragEvent<HTMLDivElement>) => dropCardHandler(e, board)}
           className={styles.item}
         >
           <Title index={index} title={board.title} total={5} />
           <Form boardId={board.id} lengthItems={board.items.length} lastId={lastId.current} />
-          {board.items.map((item) => (
+          {board.items.map((item: itemTypes) => (
             <div
               key={item.id}
-              onDragOver={(e) => dragOverHandler(e)}
-              onDragLeave={(e) => dragLeaveHandler(e)}
-              onDragStart={(e) => dragStartHandler(e, board, item)}
-              onDragEnd={(e) => dragEndHandler(e)}
-              onDrop={(e) => dragDropHandler(e, board, item)}
+              onDragOver={(e: DragEvent<HTMLDivElement>) => dragOverHandler(e)}
+              // onDragLeave={(e) => dragLeaveHandler(e)}
+              onDragStart={() => dragStartHandler(board, item)}
+              // onDragEnd={(e) => dragEndHandler(e)}
+              onDrop={(e: DragEvent<HTMLDivElement>) => dragDropHandler(e, board, item)}
               draggable
               className={styles.item}
             >

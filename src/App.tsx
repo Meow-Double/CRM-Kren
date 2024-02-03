@@ -10,12 +10,12 @@ import { SideMenu } from './components';
 import qs from 'qs';
 import styles from './App.module.scss';
 import {
-  fetchMessage,
   handleOpenAbout,
   setCurrentParametrs,
 } from './store/slices/aboutSlice/aboutSlice';
 import { fetchBoards } from './store/slices/boardsSlice/fetchBoards';
 import { useSelector } from 'react-redux';
+import { fetchMessage } from './store/slices/aboutSlice/fetchAbout';
 
 export const App = () => {
   const { isAuth } = useAuth();

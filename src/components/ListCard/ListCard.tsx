@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import styles from './ListCard.module.scss';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 import { handleOpenAbout, setCurrentParametrs } from '../../store/slices/aboutSlice/aboutSlice';
-import { removeItem } from '../../store/slices/boardsSlice/boardsSlice';
 
 interface ListCardProps {
   title: string;

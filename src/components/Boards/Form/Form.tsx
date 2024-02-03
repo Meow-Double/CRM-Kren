@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './Form.module.scss';
 import ArrowIcon from '../../../assets/arrow-up.svg?react';
 import { useAppDispatch } from '../../../hooks/useAppDispatch';
-import { addCard } from '../../../store/slices/cardsSlice/cardsSlice';
-import { getLastIdItem } from '../../../utils/getLastIdItem';
 import { addItem } from '../../../store/slices/boardsSlice/boardsSlice';
 import { createMessage } from '../../../store/slices/aboutSlice/aboutSlice';
 import dayjs from 'dayjs';
+import { itemTypes } from '../../../store/slices/boardsSlice/boardsTypes';
 
 type FormProps = {
   // id: number;
@@ -63,9 +62,9 @@ export const Form: React.FC<FormProps> = ({ boardId, lengthItems, lastId }) => {
 
     const itemId = lengthItems + 1;
     const id = lastId ? lastId + 1 : 1;
-    const obj = {
+    const obj: itemTypes = {
       title,
-      price,
+      price: Number(price),
       company,
       email,
       id,

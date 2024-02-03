@@ -10,17 +10,25 @@ import IconImage2 from '../../../public/companyIcon-2.png';
 import IconImage3 from '../../../public/comapnyIcon-3.png';
 import IconImage4 from '../../../public/comapnyIcon-4.png';
 import IconImage5 from '../../../public/comapnyIcon-5.png';
+import { boardsSelect } from '../../store/slices/boardsSlice/boardsSelectors';
+import { itemTypes } from '../../store/slices/boardsSlice/boardsTypes';
 
 const arrayImages = [IconImage1, IconImage2, IconImage3, IconImage4, IconImage5];
 
+
+interface dataTypes extends itemTypes {
+  boardId:number;
+}
+
+
 export const EditPage: React.FC<{}> = () => {
   const params = useParams();
-  const [data, setData] = useState(null);
-  const boards = useSelector((state) => state.boards.boards);
+  const [data, setData] = useState<dataTypes>();
+  const boards = useSelector(boardsSelect);
 
-  const [company, setCompany] = useState();
-  const [email, setEmail] = useState();
-  const [place, setPlace] = useState();
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [place, setPlace] = useState("");
 
   const [activeImage, setActiveImage] = useState(0);
 
@@ -48,17 +56,17 @@ export const EditPage: React.FC<{}> = () => {
 
   const changeCards = () => {
     const newObject = {
-      id: data.id,
-      itemId: data.itemId,
-      date: data.date,
-      price: data.price,
-      title: data.title,
+      id: data?.id,
+      itemId: data?.itemId,
+      date: data?.date,
+      price: data?.price,
+      title: data?.title,
       place,
       email,
       company,
       img:arrayImages[activeImage]
     };
-    dispatch(changeBoardItems({ boardId: data.boardId, obj: newObject }));
+    dispatch(changeBoardItems({ boardId: data?.boardId, obj: newObject }));
     navigate('/customers');
   };
 
