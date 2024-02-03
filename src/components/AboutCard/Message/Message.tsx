@@ -11,10 +11,15 @@ import { useSelector } from 'react-redux';
 import DeleteIcon from '../../../assets/delete.svg?react';
 import { addMessage, removeMessage } from '../../../store/slices/aboutSlice/aboutSlice';
 
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
+import { getNowDate } from '../../../utils/getNowDate';
+
 // type MessageProps = {
 //   id: number;
 //   boardId: number;
 // };
+dayjs.extend(relativeTime);
 
 export const Message: React.FC<{ id: number | null }> = ({ id }) => {
   const [value, setValue] = useState('');
@@ -91,14 +96,14 @@ export const Message: React.FC<{ id: number | null }> = ({ id }) => {
   //     .then((res) => setMessage(res.data));
   // }, [id]);
 
-  const data = useSelector(state => state.about.messages)
+  const data = useSelector((state) => state.about.messages);
 
   useEffect(() => {
-    if (data){
-      const newObject = data.find(item => item.id === id);
-      setMessage(newObject)
+    if (data) {
+      const newObject = data.find((item) => item.id === id);
+      setMessage(newObject);
     }
-  }, [data])
+  }, [data]);
 
   const renderMessage = (): JSX.Element[] => {
     // console.log(message)
@@ -106,7 +111,7 @@ export const Message: React.FC<{ id: number | null }> = ({ id }) => {
     return message.messages.map((item) => (
       <li key={item.id} className={styles.comment}>
         <div>
-          <h4>Комментраий: 04:32</h4>
+          <h4>Комментраий: {dayjs(item.date).fromNow()}</h4>
           <span>{item.text}</span>
         </div>
         <button onClick={() => removeMessageToForm(item.id)} className={styles.commentBtn}>
@@ -116,19 +121,22 @@ export const Message: React.FC<{ id: number | null }> = ({ id }) => {
     ));
   };
 
+  useEffect(() => {}, []);
 
   const addMessageToForm = () => {
-    const obj={
-      id:message ? message.messages.length + 1 : 1,
-      text:value,
-    }
-      dispatch(addMessage({id, obj}));
-      setValue("")
-  }
+    const { date } = getNowDate();
+    const obj = {
+      id: message ? message.messages.length + 1 : 1,
+      text: value,
+      date,
+    };
+    dispatch(addMessage({ id, obj }));
+    setValue('');
+  };
 
   const removeMessageToForm = (messageId) => {
-    dispatch(removeMessage({id, messageId}))
-  }
+    dispatch(removeMessage({ id, messageId }));
+  };
 
   return (
     <div className={styles.wrapper}>

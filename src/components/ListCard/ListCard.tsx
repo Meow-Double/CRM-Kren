@@ -78,13 +78,14 @@ export const ListCard: React.FC<ListCardProps> = ({
     // }
     dispatch(handleOpenAbout(true));
     dispatch(setCurrentParametrs({ id, boardId, itemId }));
-    // const querySearch = qs.stringify({
-    //   board: boardId,
-    //   id:id
-    // });
+    const querySearch = qs.stringify({
+      board: boardId,
+      itemId:itemId,
+      id:id,
+    });
     // dispatch(setOpen({ boolean: true }));
     // dispatch(setId({itemId:itemId, boardId:boardId}))
-    // navigate(`?${querySearch}`);
+    navigate(`?${querySearch}`);
   };
 
   return (

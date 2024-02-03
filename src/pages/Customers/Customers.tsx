@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import uniq from 'uniq';
 
 const cardNames = {
-  image: './',
   company: 'Наименование',
   email: 'Почта',
   place: 'Откуда пришёл',
   buttons: 'Опция',
+  img:"/public/companyIcon-1.png"
 };
 export const Customers: React.FC<{}> = () => {
   // const [data, setData] = useState();

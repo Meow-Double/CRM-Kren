@@ -29,7 +29,7 @@ export const AboutCard: React.FC<{}> = () => {
   const parametrs = useSelector(currentParametrsSelect);
   const boards = useSelector(boardsSelect);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (parametrs) {
@@ -51,16 +51,17 @@ export const AboutCard: React.FC<{}> = () => {
 
   const closeWindow = () => {
     dispatch(handleOpenAbout(false));
+    navigate('/');
   };
 
   const removeItemFromBoard = () => {
-    if (confirm("Вы уверены, что хотите удалить данный объект?")) {
+    if (confirm('Вы уверены, что хотите удалить данный объект?')) {
       const obj = {
         boardId: data.boardId,
         itemId: data.itemId,
       };
       dispatch(removeItem(obj));
-      dispatch(handleOpenAbout(false))
+      dispatch(handleOpenAbout(false));
     }
   };
 

@@ -64,20 +64,10 @@ export const aboutSlice = createSlice({
 
         fetchHandleMessage(action.payload.id, currentMessage);
       } 
-      // else {
-      //   const newMessage = {
-      //     boardId: state.currentParametrs.boardId,
-      //     itemId: state.currentParametrs.itemId,
-      //     id: state.currentParametrs.id,
-      //     messages: [action.payload.obj],
-      //   };
-      //   state.messages = [...state.messages, newMessage];
-      //   fetchCreateMessage(newMessage);
-      // }
     },
     removeMessage(state, action) {
       const currentMessage = state.messages.find((item) => item.id === action.payload.id);
-      console.log(action.payload.messageId);
+
       const newMessages = currentMessage.messages.filter(
         (item) => item.id !== action.payload.messageId,
       );

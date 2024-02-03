@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SideMenu.module.scss';
 import LogoIcon from '../../assets/logo.svg?react';
 import ExitIcon from '../../assets/exit.svg?react';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice/userSlice';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 const menuItem: string[] = [
   'Home',
@@ -20,6 +20,8 @@ const menuItem: string[] = [
 export const SideMenu: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [activeItem, setActiveItem] = useState(0);
 
   const onOutsideLogin = () => {
     window.localStorage.removeItem('user');
@@ -27,15 +29,39 @@ export const SideMenu: React.FC = () => {
     navigate('/');
   };
 
+  useEffect(() => {
+    const path = location.pathname.substring(1);
+    const result = path.charAt(0).toUpperCase() + path.slice(1);
+
+    const index = menuItem.indexOf(result);
+
+    if (index > 0) {
+      setActiveItem(index);
+    }
+  }, []);
+
+  // const renderItem = (): JSX.Element[] => {
+  //   return menuItem.map((item) => (
+  //     <li key={item}>
+  //       <NavLink
+  //         to={`${item.toLowerCase()}`}
+  //         className={({ isActive }) => (isActive ? styles.activeLink : '')}
+  //       >
+  //         {item}
+  //       </NavLink>
+  //     </li>
+  //   ));
+  // };
+
   const renderItem = (): JSX.Element[] => {
-    return menuItem.map((item) => (
-      <li key={item}>
-        <NavLink
-          to={`${item.toLowerCase()}`}
-          className={({ isActive }) => (isActive ? styles.activeLink : "")}
+    return menuItem.map((item, index) => (
+      <li key={item} onClick={() => setActiveItem(index)}>
+        <Link
+          to={item === 'Home' ? '/' : `${item.toLowerCase()}`}
+          className={activeItem === index ? styles.activeLink : ''}
         >
           {item}
-        </NavLink>
+        </Link>
       </li>
     ));
   };
@@ -50,7 +76,21 @@ export const SideMenu: React.FC = () => {
         </button>
       </div>
 
-      <ul className={styles.menu}>{renderItem()}</ul>
+      <ul className={styles.menu}>
+        {renderItem()}
+        {/* <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/orders">Orders</Link>
+        </li>
+        <li>
+          <Link to="/customers">Customers</Link>
+        </li>
+        <li>
+          <Link to="/settings">Settings</Link>
+        </li> */}
+      </ul>
     </div>
   );
 };

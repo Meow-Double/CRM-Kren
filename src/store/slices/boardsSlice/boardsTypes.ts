@@ -16,6 +16,8 @@ export type itemTypes = {
   title: string;
   price: number;
   company: string;
-  date: number;
-  email:null;
+  date: string;
+  email:string;
+  place:string;
+  img:string;
 };

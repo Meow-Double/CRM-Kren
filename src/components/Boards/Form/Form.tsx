@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Form.module.scss';
 import ArrowIcon from '../../../assets/arrow-up.svg?react';
 import { useAppDispatch } from '../../../hooks/useAppDispatch';
@@ -6,6 +6,7 @@ import { addCard } from '../../../store/slices/cardsSlice/cardsSlice';
 import { getLastIdItem } from '../../../utils/getLastIdItem';
 import { addItem } from '../../../store/slices/boardsSlice/boardsSlice';
 import { createMessage } from '../../../store/slices/aboutSlice/aboutSlice';
+import dayjs from 'dayjs';
 
 type FormProps = {
   // id: number;
@@ -13,6 +14,21 @@ type FormProps = {
   lengthItems: number;
   lastId: number | null;
 };
+
+const weekdays = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 export const Form: React.FC<FormProps> = ({ boardId, lengthItems, lastId }) => {
   const [title, setTitle] = useState('');
@@ -28,9 +44,23 @@ export const Form: React.FC<FormProps> = ({ boardId, lengthItems, lastId }) => {
     setIsOpenForm((prev) => !prev);
   };
 
+  // useEffect(() => {
+  //   dayjs.extend(updateLocale);
+
+  //   dayjs.updateLocale('en', {
+  //     weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  //   });
+  // }, []);
+
   const dispatch = useAppDispatch();
 
+  // console.log(dayjs().get('date'));
   const addNewCard = () => {
+    const dateDay = dayjs().get("date");
+    const dateMonth = weekdays[dayjs().get("month") - 1];
+    const dateYear = dayjs().get("year");
+    const date = `${dateDay} ${dateMonth} ${dateYear}`;
+
     const itemId = lengthItems + 1;
     const id = lastId ? lastId + 1 : 1;
     const obj = {
@@ -40,13 +70,12 @@ export const Form: React.FC<FormProps> = ({ boardId, lengthItems, lastId }) => {
       email,
       id,
       itemId,
-      date: `${new Date()}`,
+      date,
       place: '-',
+      img:"/public/companyIcon-1.png"
     };
     dispatch(addItem({ boardId, obj }));
     dispatch(createMessage({ boardId, itemId, id }));
-    // dispatch(addCard({ id, obj }));
-    console.log(obj);
 
     setTitle('');
     setPrice('');

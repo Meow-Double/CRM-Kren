@@ -21,9 +21,9 @@ export const Boards: React.FC<{}> = () => {
   const boardsItems = useSelector((state) => state.boards.boards);
   const { loading, error } = useSelector((state) => state.boards);
 
-  useEffect(() => {
-    dispatch(fetchBoards());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchBoards());
+  // }, []);
 
   useEffect(() => {
     if (boardsItems.length) {
@@ -41,17 +41,22 @@ export const Boards: React.FC<{}> = () => {
 
   const dragStartHandler = (e, board, item) => {
     setCurrentBoard(board);
-    setCurrentItem({ ...item, itemId: item.itemId + 1 });
+    setCurrentItem({ ...item, itemId: item.itemId});
   };
 
   const dragEndHandler = (e) => {
     e.target.style.boxShadow = 'none';
   };
+
+  
   const dragDropHandler = (e, board, item) => {
     e.preventDefault();
 
     const currentIndex = currentBoard.items.indexOf(currentItem);
     currentBoard.items.splice(currentIndex, 1);
+
+    // const currentItemId = board.items.length;
+    // const currentNewItem = { ...currentItem, itemId: currentItemId + 1 };
 
     const dropIndex = board.items.indexOf(item);
     board.items.splice(dropIndex + 1, 0, currentItem);
@@ -68,11 +73,16 @@ export const Boards: React.FC<{}> = () => {
     dispatch(changeBoards(newBoards));
   };
 
+
+
   const dropCardHandler = (e, board) => {
     e.preventDefault();
     const currentId = board.items.map((item) => item.id);
     if (!currentId.includes(currentItem.id)) {
-      board.items.push(currentItem);
+      const currentItemId = board.items.length;
+      const currentNewItem = { ...currentItem, itemId: currentItemId + 1 };
+
+      board.items.push(currentNewItem);
       const currentIndex = currentBoard.items.indexOf(currentItem);
       currentBoard.items.splice(currentIndex, 1);
 
