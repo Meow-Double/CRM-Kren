@@ -19,7 +19,7 @@ export const aboutSlice = createSlice({
     setCurrentParametrs(state, action: PayloadAction<currentParametrsTypes>) {
       state.currentParametrs = action.payload;
     },
-    addMessage(state, action: PayloadAction<{ id: number; obj: messageTypes }>) {
+    addMessage(state, action: PayloadAction<{ id: number; obj: messageTypes}>) {
       const currentMessage = state.messages.find(
         (item: aboutParametrsTypes) => item.id === action.payload.id,
       );

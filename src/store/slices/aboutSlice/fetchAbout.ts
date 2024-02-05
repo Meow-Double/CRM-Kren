@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { aboutParametrsTypes, messageTypes } from './aboutTypes';
+import { aboutParametrsTypes } from './aboutTypes';
 
 export const fetchMessage = createAsyncThunk('about/fetchMessage', async () => {
     const { data } = await axios.get(

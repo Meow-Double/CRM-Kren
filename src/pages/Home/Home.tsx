@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/slices/userSlice/userSlice';
-import styles from './Home.module.scss';
+// import styles from './Home.module.scss';
 import { Boards } from '../../components/Boards/Boards';
 import { AboutCard } from '../../components/AboutCard/AboutCard';
 import { isOpenSelect } from '../../store/slices/aboutSlice/aboutSelectors';

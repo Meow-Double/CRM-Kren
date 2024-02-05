@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './Message.module.scss';
-import axios from 'axios';
 import { useAppDispatch } from '../../../hooks/useAppDispatch';
 // import {
 //   addMessage,
@@ -14,6 +13,8 @@ import { addMessage, removeMessage } from '../../../store/slices/aboutSlice/abou
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { getNowDate } from '../../../utils/getNowDate';
+import { messageSelect } from '../../../store/slices/aboutSlice/aboutSelectors';
+import { aboutParametrsTypes, messageTypes } from '../../../store/slices/aboutSlice/aboutTypes';
 
 // type MessageProps = {
 //   id: number;
@@ -23,9 +24,9 @@ dayjs.extend(relativeTime);
 
 export const Message: React.FC<{ id: number | null }> = ({ id }) => {
   const [value, setValue] = useState('');
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState<aboutParametrsTypes | null>(null);
   // const [message, setMessage] = useState();
   const dispatch = useAppDispatch();
 
@@ -96,45 +97,49 @@ export const Message: React.FC<{ id: number | null }> = ({ id }) => {
   //     .then((res) => setMessage(res.data));
   // }, [id]);
 
-  const data = useSelector((state) => state.about.messages);
+  const data = useSelector(messageSelect);
 
   useEffect(() => {
     if (data) {
-      const newObject = data.find((item) => item.id === id);
+      const newObject = data.find(
+        (item: aboutParametrsTypes) => item.id === id,
+      ) as aboutParametrsTypes;
       setMessage(newObject);
     }
   }, [data]);
 
   const renderMessage = (): JSX.Element[] => {
-    // console.log(message)
+    if (message) {
+      return message.messages.map((item: messageTypes) => (
+        <li key={item.id} className={styles.comment}>
+          <div>
+            <h4>Комментраий: {dayjs(item.date).fromNow()}</h4>
+            <span>{item.text}</span>
+          </div>
+          <button onClick={() => removeMessageToForm(item.id)} className={styles.commentBtn}>
+            <DeleteIcon />
+          </button>
+        </li>
+      ));
+    }
 
-    return message.messages.map((item) => (
-      <li key={item.id} className={styles.comment}>
-        <div>
-          <h4>Комментраий: {dayjs(item.date).fromNow()}</h4>
-          <span>{item.text}</span>
-        </div>
-        <button onClick={() => removeMessageToForm(item.id)} className={styles.commentBtn}>
-          <DeleteIcon />
-        </button>
-      </li>
-    ));
+    return [];
   };
 
   useEffect(() => {}, []);
 
   const addMessageToForm = () => {
     const { date } = getNowDate();
-    const obj = {
+    const obj: messageTypes = {
       id: message ? message.messages.length + 1 : 1,
       text: value,
       date,
     };
-    dispatch(addMessage({ id, obj }));
+    dispatch(addMessage({ id: id ? id : 0, obj }));
     setValue('');
   };
 
-  const removeMessageToForm = (messageId) => {
+  const removeMessageToForm = (messageId: number) => {
     dispatch(removeMessage({ id, messageId }));
   };
 
@@ -153,8 +158,7 @@ export const Message: React.FC<{ id: number | null }> = ({ id }) => {
           <input onClick={addMessageToForm} className={styles.inputBtn} type="submit" />
         </div>
         <ul className={styles.commentsWrapper}>
-          {message && renderMessage()}
-          {/* {message?.comments ? renderMessage() : <li></li>} */}
+          {message ? renderMessage() : <li>Сообщения отсуствуют</li>}
         </ul>
       </div>
     </div>

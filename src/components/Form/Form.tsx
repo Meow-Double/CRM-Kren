@@ -1,50 +1,93 @@
-import { useState } from 'react';
 import styles from './Form.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type FormProps = {
-  title:string;
-  btn:BtnField;
-  handleClick: (email:string, password:string) => void
-}
+  title: string;
+  btn: BtnField;
+  handleClick: (email: string, password: string) => void;
+};
 
 type BtnField = {
-  name:string;
-  path:string
+  name: string;
+  path: string;
+};
+
+interface FormTypes {
+  email: string;
+  password: string | number;
 }
 
 export const Form: React.FC<FormProps> = ({ title, btn, handleClick }: any) => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  // const [email, setEmail] = useState<string>('');
+  // const [password, setPassword] = useState<string>('');
 
   const nav = useNavigate();
 
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormTypes>({ mode: 'onBlur' });
+  // const { errors } = useFormState();
+
+  const onSubmit: SubmitHandler<FormTypes> = (data) => {
+    handleClick(data.email, data.password);
+    reset();
+  };
+
+  const handleEmailValidation = (email: string) => {
+    const isValid =
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+        email,
+      );
+    // const validityChanged = (errors.email && isValid) || (!errors.email && !isValid);
+    // if (validityChanged) {
+    //   console.log('Fire tracker with', isValid ? 'Valid' : 'Invalid');
+    // }
+    return isValid;
+  };
+
   return (
     <>
-      <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
           className={styles.input}
-          type="email"
+          type="text"
           placeholder="your email"
+          {...register('email', {
+            required: 'Заполните поле',
+            validate: handleEmailValidation,
+          })}
         />
+        {errors?.email && <p>{errors?.email?.message || 'Error'}</p>}
         <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           className={styles.input}
           type="password"
           placeholder="your password"
+          {...register('password', {
+            required: 'password error',
+            minLength: {
+              value: 4,
+              message: 'error length',
+            },
+          })}
         />
-      </div>
-      <div className={styles.btnBlock}>
-        <button className={styles.btn} onClick={() => handleClick(email, password)}>
-          {title}
-        </button>
-        <button className={styles.btn} onClick={() => nav(btn.path)}>
-          {btn.name}
-        </button>
-      </div>
+        {errors?.password && <p>{errors?.password?.message || 'Error'}</p>}
+        <div className={styles.btnBlock}>
+          <button
+            type="submit"
+            className={styles.btn}
+            // onClick={() => handleClick(email, password)}
+          >
+            {title}
+          </button>
+          <button type="button" className={styles.btn} onClick={() => nav(btn.path)}>
+            {btn.name}
+          </button>
+        </div>
+      </form>
     </>
   );
 };

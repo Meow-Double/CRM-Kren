@@ -10,6 +10,8 @@ export const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const nav = useNavigate();
 
+
+
   const handleLogin: (email:string, password:string) => void = (email, password) => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)

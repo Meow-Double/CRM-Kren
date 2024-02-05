@@ -16,6 +16,7 @@ import {
 import { fetchBoards } from './store/slices/boardsSlice/fetchBoards';
 import { useSelector } from 'react-redux';
 import { fetchMessage } from './store/slices/aboutSlice/fetchAbout';
+import { boardsLoadingSelect } from './store/slices/boardsSlice/boardsSelectors';
 
 export const App = () => {
   const { isAuth } = useAuth();
@@ -23,7 +24,7 @@ export const App = () => {
   const navigate = useNavigate();
   const path = useLocation();
 
-  const loading = useSelector((state) => state.boards.loading);
+  const loading = useSelector(boardsLoadingSelect);
 
   useEffect(() => {
     const currentPath = path.pathname;

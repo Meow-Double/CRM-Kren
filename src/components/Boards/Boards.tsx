@@ -20,7 +20,7 @@ export const Boards: React.FC<{}> = () => {
 
   const [currentBoard, setCurrentBoard] = useState<boardsObject>();
   const [currentItem, setCurrentItem] = useState<itemTypes>();
-  const lastId = useRef(null);
+  const lastId = useRef<null | number>(null);
   const boardsItems = useSelector(boardsSelect);
   const { loading, error } = useSelector(boardsAllSelect);
 

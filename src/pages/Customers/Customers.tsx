@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card } from './Card/Card';
-import styles from './Customers.module.scss';
+// import styles from './Customers.module.scss';
 import { useSelector } from 'react-redux';
 import { boardsSelect } from '../../store/slices/boardsSlice/boardsSelectors';
 import { itemTypes } from '../../store/slices/boardsSlice/boardsTypes';
