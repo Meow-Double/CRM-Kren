@@ -1,6 +1,8 @@
 import styles from './Form.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import ErrorIcon from '../../assets/error-icon.svg?react';
+import { handleEmailValidation } from '../../utils/validateForm';
 
 type FormProps = {
   title: string;
@@ -37,21 +39,23 @@ export const Form: React.FC<FormProps> = ({ title, btn, handleClick }: any) => {
     reset();
   };
 
-  const handleEmailValidation = (email: string) => {
-    const isValid =
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-        email,
-      );
-    // const validityChanged = (errors.email && isValid) || (!errors.email && !isValid);
-    // if (validityChanged) {
-    //   console.log('Fire tracker with', isValid ? 'Valid' : 'Invalid');
-    // }
-    return isValid;
-  };
+  // const handleEmailValidation = (email: string) => {
+  //   const isValid =
+  //     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+  //       email,
+  //     );
+  //   return isValid;
+  // };
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
+        {errors?.email && (
+          <div className={styles.errorBlock}>
+            <ErrorIcon />
+            <p className={styles.errorText}>{errors?.email?.message || 'Неправильный email'}</p>
+          </div>
+        )}
         <input
           className={styles.input}
           type="text"
@@ -61,20 +65,25 @@ export const Form: React.FC<FormProps> = ({ title, btn, handleClick }: any) => {
             validate: handleEmailValidation,
           })}
         />
-        {errors?.email && <p>{errors?.email?.message || 'Error'}</p>}
+        {errors?.password && (
+          <div className={styles.errorBlock}>
+            <ErrorIcon />
+            <p className={styles.errorText}>{errors?.password?.message || 'Error'}</p>
+          </div>
+        )}
         <input
           className={styles.input}
           type="password"
           placeholder="your password"
           {...register('password', {
-            required: 'password error',
+            required: 'Заполните поле',
             minLength: {
               value: 4,
-              message: 'error length',
+              message: 'Пароль содержит меньше 4 символов',
             },
           })}
         />
-        {errors?.password && <p>{errors?.password?.message || 'Error'}</p>}
+
         <div className={styles.btnBlock}>
           <button
             type="submit"

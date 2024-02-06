@@ -83,3 +83,11 @@
   path {
   }
 }
+
+.errorStyles {
+  border-color: red;
+
+  &::placeholder {
+    color: rgb(214, 6, 6);
+  }
+}

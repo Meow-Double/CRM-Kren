@@ -6,6 +6,9 @@ import { useDispatch } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice/userSlice';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+import HomeIcon from '../../assets/home.svg?react';
+import PeoplesIcon from '../../assets/peoples.svg?react';
+
 const menuItem: string[] = [
   'Home',
   'Products',
@@ -16,6 +19,8 @@ const menuItem: string[] = [
   'Settings',
   'Help center',
 ];
+
+const arrayIcons: JSX.Element[] = [<HomeIcon />, <PeoplesIcon />];
 
 export const SideMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -55,7 +60,8 @@ export const SideMenu: React.FC = () => {
 
   const renderItem = (): JSX.Element[] => {
     return menuItem.map((item, index) => (
-      <li key={item} onClick={() => setActiveItem(index)}>
+      <li key={item} onClick={() => setActiveItem(index)} className={styles.item}>
+        {arrayIcons[index]}
         <Link
           to={item === 'Home' ? '/' : `${item.toLowerCase()}`}
           className={activeItem === index ? styles.activeLink : ''}

@@ -30,7 +30,6 @@ export const boardsSlice = createSlice({
       const newBoard = state.boards.find(
         (board) => board.id === action.payload.boardId,
       ) as boardsObject;
-        console.log(action)
       const newBoardItems = newBoard.items.filter((item) => item.itemId !== action.payload.itemId);
       const currentBoard = { ...newBoard, items: newBoardItems };
       const newBoards = state.boards.map((board) =>

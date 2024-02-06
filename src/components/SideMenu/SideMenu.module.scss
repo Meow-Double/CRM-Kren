@@ -16,7 +16,7 @@
 
   a {
     position: relative;
-    transition: color .2s ease-in-out;
+    transition: color 0.2s ease-in-out;
 
     &:hover {
       color: #a152c8;
@@ -91,11 +91,17 @@
 
 .menu {
   .activeLink {
-    color:#a152c8;
-    
+    color: #a152c8;
+
     &::before {
       opacity: 1;
       width: 100%;
     }
   }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
